@@ -9,9 +9,7 @@ shader_param/x_min = -1.0
 shader_param/x_max = 2.0
 shader_param/y_min = -1.0
 shader_param/y_max = 2.0
-shader_param/max_iter = 256
 shader_param/shimmer_speed = 0.1
-shader_param/extra_iter = 4
 
 [node name="FractalNavigation" type="ColorRect"]
 material = SubResource( 1 )

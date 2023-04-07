@@ -3,7 +3,7 @@ class_name FractalNavigation
 extends ColorRect
 
 export var zoom_sens: float = 0.06
-export var drag_speed: float = 0.003
+export var drag_speed: float = 0.005
 
 var pos_min: Vector2 setget set_pos_min, get_pos_min
 var pos_max: Vector2 setget set_pos_max, get_pos_max
@@ -47,8 +47,10 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
-		init_pos_max -= zoom * event.relative * drag_speed
-		init_pos_min -= zoom * event.relative * drag_speed
+		var move_vector: Vector2 = event.relative
+		move_vector.x *= get_aspect_ratio()
+		init_pos_max -= zoom * move_vector * drag_speed
+		init_pos_min -= zoom * move_vector * drag_speed
 	if event is InputEventMouseButton:
 		if Input.is_mouse_button_pressed(BUTTON_WHEEL_UP):
 			zoom_vel = 1 - zoom_sens
@@ -61,9 +63,8 @@ func _process(_delta) -> void:
 	update_window()
 
 func update_window() -> void:
-	var height: float = get_viewport().size.y
-	var width: float = get_viewport().size.x
-	var aspect_ratio: float = height / width;
+	
+	var aspect_ratio: float = get_aspect_ratio()
 	
 	var x_center: float = (init_pos_max.x - init_pos_min.x) / 2.0
 	var x_new_range: float = zoom * (init_pos_max.x - init_pos_min.x)
@@ -76,3 +77,8 @@ func update_window() -> void:
 	
 	self.pos_min.y *= aspect_ratio
 	self.pos_max.y *= aspect_ratio
+
+func get_aspect_ratio() -> float:
+	var height: float = get_viewport().size.y
+	var width: float = get_viewport().size.x
+	return height / width

@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="gd3-mandelbrot-demo"
+config/name="web-mandelbrot"
 run/main_scene="res://FractalNavigation.tscn"
 config/icon="res://icon.png"
 
@@ -34,5 +34,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
