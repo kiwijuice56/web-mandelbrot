@@ -15,6 +15,9 @@ var zoom_vel: float = 1.0
 
 var zoom: float = 1.0 setget set_zoom
 
+var events: Dictionary = {}
+var last_drag_distance: float = 0.0
+
 func set_pos_min(val: Vector2) -> void:
 	material.set_shader_param("x_min", val.x)
 	material.set_shader_param("y_min", val.y)
@@ -35,7 +38,6 @@ func get_pos_max() -> Vector2:
 	pos_max.y = material.get_shader_param("y_max")
 	return pos_max
 
-
 func set_zoom(val: float) -> void:
 	update_window()
 	zoom = val
@@ -46,16 +48,34 @@ func _ready() -> void:
 	update_window()
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
-		var move_vector: Vector2 = event.relative
-		move_vector.x *= get_aspect_ratio()
-		init_pos_max -= zoom * move_vector * drag_speed
-		init_pos_min -= zoom * move_vector * drag_speed
+	# Mobile zooming
+	# https://kidscancode.org/godot_recipes/3.x/2d/touchscreen_camera/
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			events[event.index] = event
+		else:
+			events.erase(event.index)
+	if event is InputEventScreenDrag:
+		events[event.index] = event
+		if events.size() == 2:
+			var drag_distance = events[0].position.distance_to(events[1].position)
+			if abs(drag_distance - last_drag_distance) > zoom_sens:
+				zoom_vel = 1 + zoom_sens if drag_distance < last_drag_distance else 1 - zoom_sens
+				last_drag_distance = drag_distance
+	
+	# PC Zooming
 	if event is InputEventMouseButton:
 		if Input.is_mouse_button_pressed(BUTTON_WHEEL_UP):
 			zoom_vel = 1 - zoom_sens
 		elif Input.is_mouse_button_pressed(BUTTON_WHEEL_DOWN):
 			zoom_vel = 1 + zoom_sens
+	
+	# Panning
+	if len(events) < 2 and event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
+		var move_vector: Vector2 = event.relative
+		move_vector.x *= get_aspect_ratio()
+		init_pos_max -= zoom * move_vector * drag_speed
+		init_pos_min -= zoom * move_vector * drag_speed
 
 func _process(_delta) -> void:
 	zoom_vel = lerp(zoom_vel, 1.0, 0.25)
@@ -63,7 +83,6 @@ func _process(_delta) -> void:
 	update_window()
 
 func update_window() -> void:
-	
 	var aspect_ratio: float = get_aspect_ratio()
 	
 	var x_center: float = (init_pos_max.x - init_pos_min.x) / 2.0
