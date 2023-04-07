@@ -62,7 +62,7 @@ func _input(event: InputEvent) -> void:
 			if abs(drag_distance - last_drag_distance) > zoom_sens:
 				zoom_vel = 1 + zoom_sens if drag_distance < last_drag_distance else 1 - zoom_sens
 				last_drag_distance = drag_distance
-				was_dragging = true
+			was_dragging = true
 	
 	# PC zooming
 	if event is InputEventMouseButton:
