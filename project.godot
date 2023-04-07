@@ -9,10 +9,10 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "ColorRect",
+"base": "Reference",
 "class": "FractalNavigation",
 "language": "GDScript",
-"path": "res://fractal_navigation.gd"
+"path": "res://main/fractal_navigation.gd"
 } ]
 _global_script_class_icons={
 "FractalNavigation": ""
@@ -20,8 +20,8 @@ _global_script_class_icons={
 
 [application]
 
-config/name="web-mandelbrot"
-run/main_scene="res://FractalNavigation.tscn"
+config/name="mandelbrot-fractal"
+run/main_scene="res://main/FractalNavigation.tscn"
 config/icon="res://icon.png"
 
 [gui]

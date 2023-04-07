@@ -29,7 +29,7 @@ vec3 color_cell(float mu) {
 	// Keep ratio in range [0, 1.0] since we are adding a large constant, TIME
 	shimmer_mu -= floor(shimmer_mu);
 	
-	return hsv2rgb(vec3(shimmer_mu, 0.5, 1.0));
+	return hsv2rgb(vec3(shimmer_mu, 0.6, 1.0));
 }
 
 void fragment() {
