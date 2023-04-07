@@ -12,11 +12,11 @@ var init_pos_min: Vector2
 var init_pos_max: Vector2
 
 var zoom_vel: float = 1.0
-
 var zoom: float = 1.0 setget set_zoom
 
 var events: Dictionary = {}
 var last_drag_distance: float = 0.0
+var was_dragging: bool = false
 
 func set_pos_min(val: Vector2) -> void:
 	material.set_shader_param("x_min", val.x)
@@ -62,8 +62,9 @@ func _input(event: InputEvent) -> void:
 			if abs(drag_distance - last_drag_distance) > zoom_sens:
 				zoom_vel = 1 + zoom_sens if drag_distance < last_drag_distance else 1 - zoom_sens
 				last_drag_distance = drag_distance
+				was_dragging = true
 	
-	# PC Zooming
+	# PC zooming
 	if event is InputEventMouseButton:
 		if Input.is_mouse_button_pressed(BUTTON_WHEEL_UP):
 			zoom_vel = 1 - zoom_sens
@@ -71,11 +72,14 @@ func _input(event: InputEvent) -> void:
 			zoom_vel = 1 + zoom_sens
 	
 	# Panning
-	if len(events) < 2 and event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
+	if not was_dragging and event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
 		var move_vector: Vector2 = event.relative
 		move_vector.x *= get_aspect_ratio()
 		init_pos_max -= zoom * move_vector * drag_speed
 		init_pos_min -= zoom * move_vector * drag_speed
+	
+	if len(events) == 0:
+		was_dragging = false
 
 func _process(_delta) -> void:
 	zoom_vel = lerp(zoom_vel, 1.0, 0.25)

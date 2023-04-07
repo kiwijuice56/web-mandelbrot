@@ -67,8 +67,8 @@ void fragment() {
 			iter++;
 		}
 		
-		float modulus = sqrt(x * x + y * y);
-		float mu = max(0, (float(iter) - log(log(modulus)) / log(2.0))) / 256.0;
+		highp float modulus = sqrt(x * x + y * y);
+		highp float mu = max(0, (float(iter) - log(log(modulus)) / log(2.0))) / 256.0;
 		
 		// `mu` is still in the range [0, 1], but the curve is shifted to spread the color
 		// values farther from the high iteration values, which are rarely reached
