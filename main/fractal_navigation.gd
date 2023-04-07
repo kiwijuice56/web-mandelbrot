@@ -3,7 +3,7 @@ class_name FractalNavigation
 extends ColorRect
 
 export var zoom_sens: float = 0.06
-export var drag_speed: float = 0.005
+export var drag_speed: float = 0.0066
 
 var pos_min: Vector2 setget set_pos_min, get_pos_min
 var pos_max: Vector2 setget set_pos_max, get_pos_max
@@ -72,12 +72,12 @@ func _input(event: InputEvent) -> void:
 			zoom_vel = 1 + zoom_sens
 	
 	# Panning
-	if not was_dragging and event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
+	if len(events) < 2 and not was_dragging and event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
 		var move_vector: Vector2 = event.relative
 		move_vector.x *= get_aspect_ratio()
 		init_pos_max -= zoom * move_vector * drag_speed
 		init_pos_min -= zoom * move_vector * drag_speed
-	
+
 	if len(events) == 0:
 		was_dragging = false
 
