@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://mandelbrot_fractal.tres" type="Shader" id=1]
+[ext_resource path="res://fractal_navigation.gd" type="Script" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/x_min = -1.0
+shader_param/x_max = 2.0
+shader_param/y_min = -1.0
+shader_param/y_max = 2.0
+shader_param/max_iter = 256
+shader_param/shimmer_speed = 0.1
+shader_param/extra_iter = 4
+
+[node name="FractalNavigation" type="ColorRect"]
+material = SubResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
