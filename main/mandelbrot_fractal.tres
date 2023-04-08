@@ -32,13 +32,13 @@ vec3 color_cell(float mu) {
 	return hsv2rgb(vec3(shimmer_mu, 0.6, 1.0));
 }
 
-void fragment() {
-	highp float x = x_min + UV.x * (x_max - x_min);
-	highp float y = y_min + UV.y * (y_max - y_min);
+vec3 mandelbrot(vec2 uv) {
+	highp float x = x_min + uv.x * (x_max - x_min);
+	highp float y = y_min + uv.y * (y_max - y_min);
 	highp float x0 = x; highp float y0 = y;
 	
 	int iter = 0;
-	COLOR.rgb = vec3(0.5, 0.2, 0.9);
+	vec3 col = vec3(0.0);
 	
 	// https://en.wikipedia.org/wiki/Mandelbrot_set
 	// For some reason, WebGL has some odd limitations that won't allow the shader to compile
@@ -54,7 +54,7 @@ void fragment() {
 	}
 	
 	if (iter == 256) {
-		COLOR.rgb = vec3(0.0);
+		col = vec3(0.0);
 	} else {
 		// Here is where we calculate `mu` for coloration
 		
@@ -73,7 +73,14 @@ void fragment() {
 		// `mu` is still in the range [0, 1], but the curve is shifted to spread the color
 		// values farther from the high iteration values, which are rarely reached
 		mu = sqrt(mu);  
-		COLOR.rgb = color_cell(mu);
+		col = color_cell(mu);
 	}
 	
+	return col;
+}
+
+void fragment() {
+	
+	vec2 s = SCREEN_PIXEL_SIZE / 2.0;
+	COLOR.rgb = (mandelbrot(UV + vec2(0.0, 0.0)) + mandelbrot(UV + vec2(s.x, 0.0)) + mandelbrot(UV + vec2(s.x, s.y)) + mandelbrot(UV + vec2(0.0, s.y))) / 4.0;
 }"

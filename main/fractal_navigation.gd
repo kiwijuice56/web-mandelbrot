@@ -3,7 +3,7 @@ class_name FractalNavigation
 extends ColorRect
 
 export var zoom_sens: float = 0.06
-export var drag_speed: float = 0.0066
+export var drag_speed: float = 0.0063
 
 var pos_min: Vector2 setget set_pos_min, get_pos_min
 var pos_max: Vector2 setget set_pos_max, get_pos_max
