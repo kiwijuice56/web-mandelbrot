@@ -80,7 +80,5 @@ vec3 mandelbrot(vec2 uv) {
 }
 
 void fragment() {
-	
-	vec2 s = SCREEN_PIXEL_SIZE / 2.0;
-	COLOR.rgb = (mandelbrot(UV + vec2(0.0, 0.0)) + mandelbrot(UV + vec2(s.x, 0.0)) + mandelbrot(UV + vec2(s.x, s.y)) + mandelbrot(UV + vec2(0.0, s.y))) / 4.0;
+	COLOR.rgb = mandelbrot(UV);
 }"
