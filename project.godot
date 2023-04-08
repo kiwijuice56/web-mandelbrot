@@ -24,6 +24,10 @@ config/name="mandelbrot-fractal"
 run/main_scene="res://main/FractalNavigation.tscn"
 config/icon="res://icon.png"
 
+[debug]
+
+gdscript/warnings/return_value_discarded=false
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true

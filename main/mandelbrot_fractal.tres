@@ -29,7 +29,7 @@ vec3 color_cell(float mu) {
 	// Keep ratio in range [0, 1.0] since we are adding a large constant, TIME
 	shimmer_mu -= floor(shimmer_mu);
 	
-	return hsv2rgb(vec3(shimmer_mu, 0.6, 1.0));
+	return hsv2rgb(vec3(shimmer_mu, 0.65, 1.0));
 }
 
 vec3 mandelbrot(vec2 uv) {
@@ -41,20 +41,19 @@ vec3 mandelbrot(vec2 uv) {
 	vec3 col = vec3(0.0);
 	
 	// https://en.wikipedia.org/wiki/Mandelbrot_set
-	// For some reason, WebGL has some odd limitations that won't allow the shader to compile
+	// WebGL has an odd limitation that won't allow the shader to compile
 	// if a non-constant is used for loops
 	for (int i = 0; i < 256; i++) {
 		highp float xtemp = x * x - y * y + x0;
 		y = 2.0 * x * y + y0;
 		x = xtemp;
 		iter++;
-		if (x * x + y * y > 4.0) {
+		if (x * x + y * y > 4.0) 
 			break;
-		}
 	}
 	
 	if (iter == 256) {
-		col = vec3(0.0);
+		col = color_cell(1.0);
 	} else {
 		// Here is where we calculate `mu` for coloration
 		

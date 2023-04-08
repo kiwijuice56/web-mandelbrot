@@ -43,8 +43,8 @@ func set_zoom(val: float) -> void:
 	zoom = val
 
 func _ready() -> void:
-	init_pos_min = Vector2(-2, -2)
-	init_pos_max = Vector2(2, 2)
+	init_pos_min = Vector2(-2.5, -2)
+	init_pos_max = Vector2(1.5, 2)
 	update_window()
 
 func _input(event: InputEvent) -> void:
@@ -77,7 +77,7 @@ func _input(event: InputEvent) -> void:
 		move_vector.x *= get_aspect_ratio()
 		init_pos_max -= zoom * move_vector * drag_speed
 		init_pos_min -= zoom * move_vector * drag_speed
-
+	
 	if len(events) == 0:
 		was_dragging = false
 
