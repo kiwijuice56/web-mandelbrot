@@ -1,12 +1,11 @@
 [gd_resource type="Shader" format=2]
 
 [resource]
-code = "// The main rendering script of the Mandelbrot fractal
-shader_type canvas_item;
+code = "shader_type canvas_item;
 
-// Bounds of the graph, set by fractal_input.gd
-uniform highp float x_min = 512; uniform highp float x_max = 512;
-uniform highp float y_min = 512; uniform highp float y_max = 512;
+// The bounds of the graph, set by fractal_navigation.gd
+uniform highp float x_min = -2; uniform highp float x_max = 2;
+uniform highp float y_min = -2; uniform highp float y_max = 2;
 
 // How fast the palette is cycled through, proportional to the change in `TIME`
 uniform float shimmer_speed = 0.1;
@@ -18,7 +17,7 @@ vec3 hsv2rgb(vec3 c) {
 	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-// Coloration: This part is not very relevant to the actual calculation, so you can
+// Coloration: This part is not relevant to the mandelbrot calculation, so you can
 // modify it for different palettes. Most palettes use the iteration count `iter` to match
 // a pixel to a color on a gradient. The parameter `mu` is a decimal number in the range
 // [0, 1] that is functionally equivalent to `iter / max_iter`, but with some extra math 
@@ -41,8 +40,8 @@ vec3 mandelbrot(vec2 uv) {
 	vec3 col = vec3(0.0);
 	
 	// https://en.wikipedia.org/wiki/Mandelbrot_set
-	// WebGL has an odd limitation that won't allow the shader to compile
-	// if a non-constant is used for loops
+	// WebGL has a limitation that won't allow the shader to compile
+	// if a non-constant is used in for-loops; 256 is `MAX_ITER`
 	for (int i = 0; i < 256; i++) {
 		highp float xtemp = x * x - y * y + x0;
 		y = 2.0 * x * y + y0;
@@ -59,7 +58,6 @@ vec3 mandelbrot(vec2 uv) {
 		
 		// We take some extra iterations for a smaller error in the coloration
 		for (int extra_iter = 0; extra_iter < 4; extra_iter++) {
-			// x = abs(x); y = abs(y); Uncomment for burning ship fractal
 			highp float xtemp = x * x - y * y + x0;
 			y = 2.0 * x * y + y0;
 			x = xtemp;
