@@ -14,6 +14,7 @@ shader_param/width = 1000.0
 shader_param/height = 800.0
 shader_param/shimmer_speed = 0.1
 shader_param/oversample = false
+shader_param/burning_ship = false
 shader_param/palette = 1
 
 [node name="FractalNavigation" type="ColorRect"]

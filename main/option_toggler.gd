@@ -4,7 +4,7 @@ extends Node
 
 # Each string in this array corresponds to a boolean in the shader and an input 
 # action to reduce code repetition for simple toggles
-const settings = ["oversample"]
+const settings = ["oversample", "burning_ship"]
 
 onready var material: ShaderMaterial = get_parent().material
 
