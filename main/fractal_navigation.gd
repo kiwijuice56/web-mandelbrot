@@ -2,10 +2,7 @@
 class_name FractalNavigation
 extends ColorRect
 
-export var zoom_snap: float = 16.0
-export var zoom_sens: float = 4.0
-
-export var drag_threshold: float = 0.05
+export var zoom_sens: float = 0.06
 export var drag_speed: float = 0.0063
 
 var pos_min: Vector2 setget set_pos_min, get_pos_min
@@ -62,33 +59,31 @@ func _input(event: InputEvent) -> void:
 		events[event.index] = event
 		if events.size() == 2:
 			var drag_distance = events[0].position.distance_to(events[1].position)
-			if abs(drag_distance - last_drag_distance) > drag_threshold:
-				zoom_vel = +1 if drag_distance < last_drag_distance else -1
+			if abs(drag_distance - last_drag_distance) > zoom_sens:
+				zoom_vel = 1 + zoom_sens if drag_distance < last_drag_distance else 1 - zoom_sens
 				last_drag_distance = drag_distance
 			was_dragging = true
 	
 	# PC zooming
 	if event is InputEventMouseButton:
-		if event.is_action_pressed("zoom_in"):
-			zoom_vel = -1
-		elif event.is_action_pressed("zoom_out"):
-			zoom_vel = +1
+		if Input.is_mouse_button_pressed(BUTTON_WHEEL_UP):
+			zoom_vel = 1 - zoom_sens
+		elif Input.is_mouse_button_pressed(BUTTON_WHEEL_DOWN):
+			zoom_vel = 1 + zoom_sens
 	
 	# Panning
 	if len(events) < 2 and not was_dragging and event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
-		var move_vel: Vector2 = event.relative
-		move_vel.x *= get_aspect_ratio()
-		init_pos_max -= zoom * move_vel * drag_speed
-		init_pos_min -= zoom * move_vel * drag_speed 
-		
+		var move_vector: Vector2 = event.relative
+		move_vector.x *= get_aspect_ratio()
+		init_pos_max -= zoom * move_vector * drag_speed
+		init_pos_min -= zoom * move_vector * drag_speed
 	
 	if len(events) == 0:
 		was_dragging = false
 
-func _process(delta: float) -> void:
-	zoom_vel = lerp(zoom_vel, 0.0, zoom_snap * delta)
-	self.zoom += zoom * delta * zoom_vel * zoom_sens
-	
+func _process(_delta) -> void:
+	zoom_vel = lerp(zoom_vel, 1.0, 0.25)
+	self.zoom *= zoom_vel
 	update_window()
 
 func update_window() -> void:
