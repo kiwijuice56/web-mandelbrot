@@ -1,19 +1,24 @@
-# Implements navigation through the fractal using mouse inputs
+# Navigation through the fractal using mouse inputs
 class_name FractalNavigation
 extends ColorRect
 
-export var zoom_sens: float = 0.06
+export var zoom_sensitivity: float = 0.06
 export var drag_speed: float = 0.0063
+export var move_speed: float = 0.8
 
+# The top-left and bottom-right bounds of the graph, synced with the shader
 var pos_min: Vector2 setget set_pos_min, get_pos_min
 var pos_max: Vector2 setget set_pos_max, get_pos_max
 
-var init_pos_min: Vector2
-var init_pos_max: Vector2
+# The top-left and bottom-right bounds of the graph before the zoom scale
+var offset_min: Vector2
+var offset_max: Vector2
 
+# The zoom scalar has a velocity in order to implement smooth zooming
 var zoom_vel: float = 1.0
 var zoom: float = 1.0 setget set_zoom
 
+# Extra state to implement mobile zooming and dragging
 var events: Dictionary = {}
 var last_drag_distance: float = 0.0
 var was_dragging: bool = false
@@ -43,8 +48,8 @@ func set_zoom(val: float) -> void:
 	zoom = val
 
 func _ready() -> void:
-	init_pos_min = Vector2(-2.5, -2)
-	init_pos_max = Vector2(1.5, 2)
+	offset_min = Vector2(-2.5, -2)
+	offset_max = Vector2(1.5, 2)
 	update_window()
 
 func _input(event: InputEvent) -> void:
@@ -59,47 +64,58 @@ func _input(event: InputEvent) -> void:
 		events[event.index] = event
 		if events.size() == 2:
 			var drag_distance = events[0].position.distance_to(events[1].position)
-			if abs(drag_distance - last_drag_distance) > zoom_sens:
-				zoom_vel = 1 + zoom_sens if drag_distance < last_drag_distance else 1 - zoom_sens
+			if abs(drag_distance - last_drag_distance) > zoom_sensitivity:
+				zoom_vel = 1 + zoom_sensitivity if drag_distance < last_drag_distance else 1 - zoom_sensitivity
 				last_drag_distance = drag_distance
 			was_dragging = true
 	
 	# PC zooming
 	if event is InputEventMouseButton:
 		if Input.is_mouse_button_pressed(BUTTON_WHEEL_UP):
-			zoom_vel = 1 - zoom_sens
+			zoom_vel = 1 - zoom_sensitivity
 		elif Input.is_mouse_button_pressed(BUTTON_WHEEL_DOWN):
-			zoom_vel = 1 + zoom_sens
+			zoom_vel = 1 + zoom_sensitivity
 	
 	# Panning
 	if len(events) < 2 and not was_dragging and event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_LEFT):
 		var move_vector: Vector2 = event.relative
 		move_vector.x *= get_aspect_ratio()
-		init_pos_max -= zoom * move_vector * drag_speed
-		init_pos_min -= zoom * move_vector * drag_speed
+		offset_max -= zoom * move_vector * drag_speed
+		offset_min -= zoom * move_vector * drag_speed
 	
 	if len(events) == 0:
 		was_dragging = false
 
-func _process(_delta) -> void:
+func _process(delta: float) -> void:
 	zoom_vel = lerp(zoom_vel, 1.0, 0.25)
 	self.zoom *= zoom_vel
+	
+	var kb_vector: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	kb_vector.x *= get_aspect_ratio() 
+	
+	offset_max += zoom * kb_vector * move_speed * delta
+	offset_min += zoom * kb_vector * move_speed * delta
+	
 	update_window()
 
 func update_window() -> void:
 	var aspect_ratio: float = get_aspect_ratio()
 	
-	var x_center: float = (init_pos_max.x - init_pos_min.x) / 2.0
-	var x_new_range: float = zoom * (init_pos_max.x - init_pos_min.x)
-	var y_center: float = (init_pos_max.y - init_pos_min.y) / 2.0
-	var y_new_range: float = zoom * (init_pos_max.y - init_pos_min.y)
+	var x_center: float = (offset_max.x - offset_min.x) / 2.0
+	var x_new_range: float = zoom * (offset_max.x - offset_min.x)
+	var y_center: float = (offset_max.y - offset_min.y) / 2.0
+	var y_new_range: float = zoom * (offset_max.y - offset_min.y)
 	
-	var temp_min = Vector2(init_pos_min.x + x_center - x_new_range / 2.0, init_pos_min.y + y_center - y_new_range / 2.0)
-	self.pos_max = Vector2(init_pos_min.x + x_center + x_new_range / 2.0, init_pos_min.y + y_center + y_new_range / 2.0)
+	var temp_min = Vector2(offset_min.x + x_center - x_new_range / 2.0, offset_min.y + y_center - y_new_range / 2.0)
+	
+	self.pos_max = Vector2(offset_min.x + x_center + x_new_range / 2.0, offset_min.y + y_center + y_new_range / 2.0)
 	self.pos_min = temp_min
 	
 	self.pos_min.y *= aspect_ratio
 	self.pos_max.y *= aspect_ratio
+	
+	material.set_shader_param("width", get_viewport().size.x)
+	material.set_shader_param("height", get_viewport().size.y)
 
 func get_aspect_ratio() -> float:
 	var height: float = get_viewport().size.y

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://main/mandelbrot_fractal.tres" type="Shader" id=1]
 [ext_resource path="res://main/fractal_navigation.gd" type="Script" id=2]
+[ext_resource path="res://main/option_toggler.gd" type="Script" id=3]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 1 )
@@ -9,10 +10,17 @@ shader_param/x_min = -1.0
 shader_param/x_max = 2.0
 shader_param/y_min = -1.0
 shader_param/y_max = 2.0
+shader_param/width = 1000.0
+shader_param/height = 800.0
 shader_param/shimmer_speed = 0.1
+shader_param/oversample = false
+shader_param/palette = 1
 
 [node name="FractalNavigation" type="ColorRect"]
 material = SubResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
+
+[node name="OptionToggler" type="Node" parent="."]
+script = ExtResource( 3 )
