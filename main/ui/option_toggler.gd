@@ -11,7 +11,7 @@ onready var material: ShaderMaterial = fractal.material
 
 func _input(event: InputEvent) -> void:
 	for toggle in settings:
-		if Input.is_action_just_pressed(toggle):
+		if event.is_action_pressed(toggle, false):
 			material.set_shader_param(toggle, not material.get_shader_param(toggle))
 	if event.is_action_pressed("mouse_lock", false):
 		fractal.mouse_lock = not fractal.mouse_lock
