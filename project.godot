@@ -14,14 +14,26 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://main/fractal_navigation.gd"
 }, {
-"base": "Node",
+"base": "Reference",
 "class": "OptionToggler",
 "language": "GDScript",
-"path": "res://main/option_toggler.gd"
+"path": "res://main/ui/option_toggler.gd"
+}, {
+"base": "Button",
+"class": "ToggleHelpButton",
+"language": "GDScript",
+"path": "res://main/ui/toggle_help_button.gd"
+}, {
+"base": "LinkButton",
+"class": "UrlButton",
+"language": "GDScript",
+"path": "res://main/ui/url_button.gd"
 } ]
 _global_script_class_icons={
 "FractalNavigation": "",
-"OptionToggler": ""
+"OptionToggler": "",
+"ToggleHelpButton": "",
+"UrlButton": ""
 }
 
 [application]

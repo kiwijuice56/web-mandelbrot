@@ -6,7 +6,7 @@ extends Node
 # action to reduce code repetition for simple toggles
 const settings = ["oversample", "burning_ship"]
 
-onready var material: ShaderMaterial = get_parent().material
+onready var material: ShaderMaterial = get_tree().get_root().get_node("FractalNavigation").material
 
 func _input(_event: InputEvent) -> void:
 	for toggle in settings:

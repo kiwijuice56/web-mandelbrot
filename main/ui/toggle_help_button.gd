@@ -1,0 +1,8 @@
+class_name ToggleHelpButton
+extends Button
+
+func _ready() -> void:
+	connect("pressed", self, "_on_pressed")
+
+func _on_pressed() -> void:
+	get_node("%HelpPanelContainer").visible = not get_node("%HelpPanelContainer").visible
