@@ -22,6 +22,7 @@ var zoom: float = 1.0 setget set_zoom
 var events: Dictionary = {}
 var last_drag_distance: float = 0.0
 var was_dragging: bool = false
+var mouse_lock: bool = false
 
 func set_pos_min(val: Vector2) -> void:
 	material.set_shader_param("x_min", val.x)
@@ -53,6 +54,10 @@ func _ready() -> void:
 	update_window()
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and not mouse_lock:
+		var pos: Vector2 = event.position / get_viewport().size
+		material.set_shader_param("mouse_pos", (pos_max - pos_min) * pos + pos_min)
+	
 	# Mobile zooming
 	# https://kidscancode.org/godot_recipes/3.x/2d/touchscreen_camera/
 	if event is InputEventScreenTouch:

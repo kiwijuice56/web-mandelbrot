@@ -10,12 +10,15 @@ uniform highp float y_min = -2; uniform highp float y_max = 2;
 uniform float width = 1000;
 uniform float height = 800;
 
+uniform highp vec2 mouse_pos;
+
 // How fast the palette is cycled through, proportional to the change in `TIME`
 uniform float shimmer_speed = 0.1;
 
 uniform bool oversample = true;
 uniform bool burning_ship = false;
-uniform int palette = 1;
+uniform bool julia = false;
+uniform int palette = 4;
 
 // http://lolengine.net/blog/2013/07/27/rgb-to-hsv-in-glsl
 vec3 hsv2rgb(vec3 c) {
@@ -77,8 +80,8 @@ vec3 mandelbrot(vec2 uv) {
 		if (burning_ship) {
 			x = abs(x); y = abs(y);
 		}
-		highp float xtemp = x * x - y * y + x0;
-		y = 2.0 * x * y + y0;
+		highp float xtemp = x * x - y * y + (julia ? mouse_pos.x : x0);
+		y = 2.0 * x * y + (julia ? mouse_pos.y : y0);
 		x = xtemp;
 		iter++;
 		if (x * x + y * y > 4.0) 
@@ -95,8 +98,8 @@ vec3 mandelbrot(vec2 uv) {
 			if (burning_ship) {
 				x = abs(x); y = abs(y);
 			}
-			highp float xtemp = x * x - y * y + x0;
-			y = 2.0 * x * y + y0;
+			highp float xtemp = x * x - y * y + (julia ? mouse_pos.x : x0);
+			y = 2.0 * x * y + (julia ? mouse_pos.y : y0);
 			x = xtemp;
 			iter++;
 		}

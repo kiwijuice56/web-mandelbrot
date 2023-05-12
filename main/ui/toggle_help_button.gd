@@ -6,3 +6,7 @@ func _ready() -> void:
 
 func _on_pressed() -> void:
 	get_node("%HelpPanelContainer").visible = not get_node("%HelpPanelContainer").visible
+	if not get_node("%HelpPanelContainer").visible:
+		text = "help"
+	else:
+		text = "close"

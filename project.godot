@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://main/fractal_navigation.gd"
 }, {
-"base": "Reference",
+"base": "Node",
 "class": "OptionToggler",
 "language": "GDScript",
 "path": "res://main/ui/option_toggler.gd"
@@ -84,6 +84,16 @@ move_down={
 burning_ship={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":66,"unicode":0,"echo":false,"script":null)
+ ]
+}
+julia={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":74,"unicode":0,"echo":false,"script":null)
+ ]
+}
+mouse_lock={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":76,"unicode":0,"echo":false,"script":null)
  ]
 }
 
