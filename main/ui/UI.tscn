@@ -43,7 +43,6 @@ text = "Navigation controls:
 Graphic controls:
 - 1-5: color palette
 - O: oversampling
-- B: burning ship
 - J: julia"
 autowrap = true
 

@@ -77,9 +77,6 @@ vec3 mandelbrot(vec2 uv) {
 	// WebGL has a limitation that won't allow the shader to compile
 	// if a non-constant is used in for-loops; 256 is `MAX_ITER`
 	for (int i = 0; i < 256; i++) {
-		if (burning_ship) {
-			x = abs(x); y = abs(y);
-		}
 		highp float xtemp = x * x - y * y + (julia ? mouse_pos.x : x0);
 		y = 2.0 * x * y + (julia ? mouse_pos.y : y0);
 		x = xtemp;
@@ -95,9 +92,6 @@ vec3 mandelbrot(vec2 uv) {
 		
 		// We take some extra iterations for a smaller error in the coloration
 		for (int extra_iter = 0; extra_iter < 4; extra_iter++) {
-			if (burning_ship) {
-				x = abs(x); y = abs(y);
-			}
 			highp float xtemp = x * x - y * y + (julia ? mouse_pos.x : x0);
 			y = 2.0 * x * y + (julia ? mouse_pos.y : y0);
 			x = xtemp;
