@@ -36,7 +36,8 @@ margin_right = 1008.0
 margin_bottom = 540.0
 size_flags_vertical = 3
 text = "Navigation controls:
-- WASD, arrow keys, mouse: movement
+- WASD, mouse: movement
+- arrow keys: rotation about origin
 - mouse wheel: zoom
 - L: locks mouse (julia)
 

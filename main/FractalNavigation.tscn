@@ -12,6 +12,7 @@ shader_param/y_min = -1.0
 shader_param/y_max = 2.0
 shader_param/width = 1000.0
 shader_param/height = 800.0
+shader_param/angle = 0.0
 shader_param/mouse_pos = null
 shader_param/shimmer_speed = 0.1
 shader_param/oversample = false

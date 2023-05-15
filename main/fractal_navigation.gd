@@ -5,6 +5,7 @@ extends ColorRect
 export var zoom_sensitivity: float = 0.06
 export var drag_speed: float = 0.0063
 export var move_speed: float = 0.8
+export var rotate_speed: float = 0.6
 
 # The top-left and bottom-right bounds of the graph, synced with the shader
 var pos_min: Vector2 setget set_pos_min, get_pos_min
@@ -96,10 +97,13 @@ func _process(delta: float) -> void:
 	self.zoom *= zoom_vel
 	
 	var kb_vector: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var kb_angle: float = Input.get_action_strength("rotate_left") - Input.get_action_strength("rotate_right")
 	kb_vector.x *= get_aspect_ratio() 
 	
 	offset_max += zoom * kb_vector * move_speed * delta
 	offset_min += zoom * kb_vector * move_speed * delta
+	
+	material.set_shader_param("angle", material.get_shader_param("angle") + kb_angle * delta * rotate_speed)
 	
 	update_window()
 
